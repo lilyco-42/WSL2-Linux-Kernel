@@ -30,21 +30,27 @@ git clone --depth 1 -b linux-msft-wsl-6.6.y git@github.com:lilyco-42/WSL2-Linux-
 使用文本编辑器打开它，添加以下配置（此路径修改为你实际克隆出的vmlinux绝对路径，注意必须使用双反斜杠\\）：
 
 Ini，TOML
+```
 [wsl2]
 kernel=C:\\Users\\你的Windows用户名\\Documents\\WSL2-Linux-Kernel\\vmlinux
+```
 3.重启WSL2生效
 Windows Terminal (PowerShell)，强行关闭并重启打开WSL实例：
 
+```
 PowerShell
 wsl --shutdown
+```
 重新进入你的WSL2终端，验证内核版本与编译时间是否已切换成功：
-
+```
 巴什
 uname -a
+```
 🛠️场景二：自己编写与编译的Linux内核模块(.ko)
 本仓库内置了完整的模块编译支持，别人或者你自己下载全量仓库源码，就可以直接在这个轻量仓库上编译驱动。
 
 1.编写你的驱动代码（例如hello.c）
+```
 C
 #include <linux/init.h>
 #include <linux/module.h>
@@ -65,13 +71,15 @@ static void __exit hello_exit(void) {
 
 module_init(hello_init);
 module_exit(hello_exit);
+```
 2. 准备的Makefile
 在驱动同级目录下创建Makefile，源码将KDIR指向本仓库克隆下来的本地路径：
-
+```
 Makefile
 obj-m += hello.o
-
+```
 # 将此处替换为本仓库在本地的绝对路径
+```
 KDIR := /home/lyco/WSL2-Linux-Kernel
 
 PWD := $(shell pwd)
@@ -81,10 +89,12 @@ all:
 
 clean:
 	$(MAKE) -C $(KDIR) M=$(PWD) clean
+```
 3.编译与加载
 在驱动目录下直接执行：
-
+```
 巴什
+
 # 1. 借用本仓库的构建桩一键编译驱动
 make
 
@@ -93,8 +103,10 @@ sudo insmod hello.ko
 
 # 3. 查看内核日志，验证是否打印成功
 dmesg | tail -n 5
+```
 🔍场景三：普通C/C++程序引用内核标准头文件
 如果你在编写依赖内核底层数据结构的普通用户态程序，可以直接通过-I参数将头文件内部路径指向本仓库的usr/include：
-
+```
 Makefile
 CFLAGS += -I/path/to/WSL2-Linux-Kernel/usr/include
+```
