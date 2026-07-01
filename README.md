@@ -21,7 +21,7 @@
 由于去除了历史包袱，使用 `--depth 1` 可以实现秒级克隆：
 ```bash
 git clone --depth 1 -b linux-msft-wsl-6.6.y git@github.com:lilyco-42/WSL2-Linux-Kernel.git
-
+```
 2.在Windows中配置.wslconfig
 在Windows资源管理器中，点击荒野Win + R，输入%USERPROFILE%回车（进入Windows当前用户的主目录）。
 
